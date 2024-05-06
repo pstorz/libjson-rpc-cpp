@@ -1,15 +1,16 @@
 cmake_minimum_required(VERSION 3.0)
 
 # setup directory where we should look for cmake files
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 option(HUNTER_ENABLED "Enable Hunter package manager" NO)
-include(HunterGate)
-HunterGate(
-	URL "https://github.com/ruslo/hunter/archive/v0.18.47.tar.gz"
-	SHA1 "f0c476a3a0f9edd6182936d8c4460811f112189c"
-)
-
+if(HUNTER_ENABLED)
+  include(HunterGate)
+  HunterGate(
+    URL "https://github.com/ruslo/hunter/archive/v0.18.47.tar.gz"
+    SHA1 "f0c476a3a0f9edd6182936d8c4460811f112189c"
+  )
+endif()
 project(libjson-rpc-cpp)
 
 # list command no longer ignores empty elements
