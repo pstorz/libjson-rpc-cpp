@@ -195,7 +195,7 @@ if (BUILD_SHARED_LIBS)
     set_target_properties(jsonrpcserver PROPERTIES OUTPUT_NAME jsonrpccpp-server)
     target_include_directories(jsonrpcserver PUBLIC
       $<INSTALL_INTERFACE:include/jsonrpccpp>
-      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/jsonrpccpp>)
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 endif ()
 
 # setup static server library
