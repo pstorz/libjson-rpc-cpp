@@ -190,12 +190,13 @@ endif ()
 # setup shared server library
 if (BUILD_SHARED_LIBS)
     add_library(jsonrpcserver SHARED ${jsonrpc_source_server} ${jsonrpc_header} ${jsonrpc_header_server} ${server_connector_source})
+    add_library(libjson-rpc-cpp::jsonrpcserver ALIAS jsonrpcserver)
     add_dependencies(jsonrpcserver jsonrpccommon)
     target_link_libraries(jsonrpcserver jsonrpccommon ${server_connector_libs})
     set_target_properties(jsonrpcserver PROPERTIES OUTPUT_NAME jsonrpccpp-server)
     target_include_directories(jsonrpcserver PUBLIC
       $<INSTALL_INTERFACE:include/jsonrpccpp>
-      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>)
 endif ()
 
 # setup static server library
