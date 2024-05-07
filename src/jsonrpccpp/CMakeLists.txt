@@ -139,11 +139,11 @@ if (FILE_DESCRIPTOR_CLIENT)
 endif ()
 
 # configure a header file to pass some of the CMake settings to the source code
-file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/gen/jsonrpccpp/common")
-configure_file("${PROJECT_SOURCE_DIR}/src/jsonrpccpp/version.h.in" "${CMAKE_BINARY_DIR}/gen/jsonrpccpp/version.h")
-configure_file("${PROJECT_SOURCE_DIR}/src/jsonrpccpp/common/jsonparser.h.in" "${CMAKE_BINARY_DIR}/gen/jsonrpccpp/common/jsonparser.h")
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/gen/jsonrpccpp/common")
+configure_file("${PROJECT_SOURCE_DIR}/src/jsonrpccpp/version.h.in" "${CMAKE_CURRENT_BINARY_DIR}/gen/jsonrpccpp/version.h")
+configure_file("${PROJECT_SOURCE_DIR}/src/jsonrpccpp/common/jsonparser.h.in" "${CMAKE_CURRENT_BINARY_DIR}/gen/jsonrpccpp/common/jsonparser.h")
 
-install(FILES "${CMAKE_BINARY_DIR}/gen/jsonrpccpp/version.h" DESTINATION include/jsonrpccpp)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gen/jsonrpccpp/version.h" DESTINATION include/jsonrpccpp)
 install(FILES "${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common/jsonparser.h" DESTINATION include/jsonrpccpp/common)
 
 # include required directories
@@ -155,6 +155,11 @@ if (BUILD_SHARED_LIBS)
     add_library(jsonrpccommon SHARED ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
     target_link_libraries(jsonrpccommon ${JSONCPP_LIBRARY})
     set_target_properties(jsonrpccommon PROPERTIES OUTPUT_NAME jsonrpccpp-common)
+    target_include_directories(jsonrpccommon PUBLIC
+      $<INSTALL_INTERFACE:include/jsonrpccpp>
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/..>
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/gen>
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/gen/jsonrpccpp/common>)
 endif ()
 
 # setup static common library
@@ -171,9 +176,13 @@ endif ()
 # setup shared client library
 if (BUILD_SHARED_LIBS)
     add_library(jsonrpcclient SHARED ${jsonrpc_source_client} ${jsonrpc_header} ${jsonrpc_header_client} ${client_connector_source})
+    add_library(libjson-rpc-cpp::jsonrpcclient ALIAS jsonrpcclient)
     add_dependencies(jsonrpcclient jsonrpccommon)
     target_link_libraries(jsonrpcclient jsonrpccommon ${client_connector_libs})
     set_target_properties(jsonrpcclient PROPERTIES OUTPUT_NAME jsonrpccpp-client)
+    target_include_directories(jsonrpcclient PUBLIC
+      $<INSTALL_INTERFACE:include/jsonrpccpp>
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/..>)
 endif ()
 
 # setup static client library
@@ -238,10 +247,10 @@ install(FILES ${server_connector_header} DESTINATION include/jsonrpccpp/server/c
 
 if (WIN32 AND NOT HUNTER_ENABLED)
     # On Windows copy manually installed dependencies unless Hunter is used.
-    file(GLOB win32_libs ${CMAKE_SOURCE_DIR}/win32-deps/lib/*.dll)
+    file(GLOB win32_libs ${CMAKE_CURRENT_SOURCE_DIR}/win32-deps/lib/*.dll)
     file(COPY ${win32_libs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
     install(FILES ${win32_libs} DESTINATION bin)
-    install(DIRECTORY ${CMAKE_SOURCE_DIR}/win32-deps/include DESTINATION .)
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/win32-deps/include DESTINATION .)
 endif ()
 
 install(TARGETS ${ALL_LIBS} EXPORT libjson-rpc-cppTargets
@@ -255,12 +264,12 @@ get_filename_component(FULL_PATH_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" ABSOLU
 set(FULL_PATH_INCLUDEDIR "${FULL_PATH_INSTALL_PREFIX}/include")
 set(FULL_PATH_LIBDIR "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
-configure_file(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-client.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-client.pc)
-configure_file(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-server.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc)
-configure_file(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-common.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-common.pc)
+configure_file(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-client.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libjsonrpccpp-client.pc)
+configure_file(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-server.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libjsonrpccpp-server.pc)
+configure_file(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-common.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libjsonrpccpp-common.pc)
 
 INSTALL(FILES
-        "${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc"
-        "${CMAKE_BINARY_DIR}/libjsonrpccpp-client.pc"
-        "${CMAKE_BINARY_DIR}/libjsonrpccpp-common.pc"
+        "${CMAKE_CURRENT_BINARY_DIR}/libjsonrpccpp-server.pc"
+        "${CMAKE_CURRENT_BINARY_DIR}/libjsonrpccpp-client.pc"
+        "${CMAKE_CURRENT_BINARY_DIR}/libjsonrpccpp-common.pc"
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")

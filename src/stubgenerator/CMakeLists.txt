@@ -39,19 +39,19 @@ else ()
 endif ()
 #Generate manpage
 if (NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-    configure_file("${CMAKE_SOURCE_DIR}/doc/manpage.in" "${CMAKE_BINARY_DIR}/jsonrpcstub.1" @ONLY)
-    add_custom_target(manpage ALL DEPENDS ${CMAKE_BINARY_DIR}/jsonrpcstub.1)
-    install(FILES ${CMAKE_BINARY_DIR}/jsonrpcstub.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1/)
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/doc/manpage.in" "${CMAKE_CURRENT_BINARY_DIR}/jsonrpcstub.1" @ONLY)
+    add_custom_target(manpage ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/jsonrpcstub.1)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/jsonrpcstub.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1/)
     add_dependencies(jsonrpcstub manpage)
 endif ()
 
-configure_file(${CMAKE_SOURCE_DIR}/cmake/libjsonrpccpp-stub.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-stub.pc)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/libjsonrpccpp-stub.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libjsonrpccpp-stub.pc)
 
 install(FILES
-        "${CMAKE_BINARY_DIR}/libjsonrpccpp-stub.pc"
+        "${CMAKE_CURRENT_BINARY_DIR}/libjsonrpccpp-stub.pc"
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/stubgenerator/
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/stubgenerator/
         DESTINATION include/jsonrpccpp/stubgen
         FILES_MATCHING PATTERN "*.h")
 

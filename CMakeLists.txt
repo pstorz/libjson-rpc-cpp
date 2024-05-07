@@ -92,8 +92,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 
 # setup global include_directories (for backwards compatibility)
-include_directories("${CMAKE_BINARY_DIR}/gen/")
-include_directories("${CMAKE_BINARY_DIR}/gen/jsonrpccpp/common")
+include_directories("${CMAKE_CURRENT_BINARY_DIR}/gen/")
+include_directories("${CMAKE_CURRENT_BINARY_DIR}/gen/jsonrpccpp/common")
 
 # the core framework
 add_subdirectory(src/jsonrpccpp)
@@ -116,10 +116,10 @@ endif()
 
 # create documentation
 if (DOXYGEN_FOUND)
-    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/doc)
+    file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc)
     message(STATUS "Found doxygen: ${DOXYGEN_EXECUTABLE}")
-    configure_file("${PROJECT_SOURCE_DIR}/doc/doxyfile.in" "${CMAKE_BINARY_DIR}/Doxyfile" @ONLY)
-    add_custom_target(doc ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc COMMENT "Generating API documentation")
+    configure_file("${PROJECT_SOURCE_DIR}/doc/doxyfile.in" "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile" @ONLY)
+    add_custom_target(doc ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc COMMENT "Generating API documentation")
 endif(DOXYGEN_FOUND)
 
 # setup uninstall target

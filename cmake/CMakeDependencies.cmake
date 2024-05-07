@@ -1,11 +1,11 @@
 # all dependencies that are not directly included in the libjson-rpc-cpp distribution are defined here!
-# default search directory for dependencies is ${CMAKE_SOURCE_DIR}/win32-deps (for backwards compatibility)
+# default search directory for dependencies is ${CMAKE_CURRENT_SOURCE_DIR}/win32-deps (for backwards compatibility)
 # if your dependencies directory is different, please run cmake with CMAKE_PREFIX_PATH option eg:
 #
 # cmake -DCMAKE_PREFIX_PATH=path_to_your_dependencies .
 
 # set default dependencies search path
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_SOURCE_DIR}/win32-deps")
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/win32-deps")
 
 find_package(Jsoncpp REQUIRED)
 message(STATUS "Jsoncpp header: ${JSONCPP_INCLUDE_DIR}")
